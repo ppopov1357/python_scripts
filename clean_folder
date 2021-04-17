@@ -1,0 +1,61 @@
+#!/usr/bin/env python
+
+from os import listdir, remove
+from os.path import exists, isfile
+from fnmatch import fnmatch
+import argparse
+
+
+def parse_args(parser):
+    arguments = parser.parse_args()
+    return arguments.path, arguments.patterns
+
+
+def search_files(path, patterns) -> list:
+    return [file for file in listdir(path) if file_matches_patterns(file, patterns)]
+
+
+def file_matches_patterns(file, patterns) -> bool:
+    matches = False
+    for pattern in patterns:
+        if fnmatch(file, pattern):
+            matches = True
+            break
+
+    return matches
+
+
+def print_files(files: list):
+    for file in files:
+        print(file)
+
+    print("The listed files will be deleted: [Y/N]")
+
+
+def delete_files(path, files: list):
+    for file in files:
+        print(f'Removing file: {file}')
+        remove(f'{path}/{file}')
+    print('Done.')
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='Clean folder matching provided pattern')
+    parser.add_argument('path', type=str, help='Path to a folder to clean')
+    parser.add_argument('patterns', type=str, help='File name pattern. Example: "*.txt"', nargs='+')
+
+    (path, patterns) = parse_args(parser)
+
+    if not exists(path) or isfile(path):
+        raise Exception(f'No such directory: {path}')
+
+    files = search_files(path, patterns)
+    print_files(files)
+
+    confirmations = ["y", 'yes']
+    confirmation = input().lower()
+    if confirmation not in confirmations:
+        print("Aborting...")
+        quit()
+
+    delete_files(path, files)
