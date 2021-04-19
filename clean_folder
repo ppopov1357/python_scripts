@@ -52,9 +52,8 @@ if __name__ == '__main__':
     files = search_files(path, patterns)
     print_files(files)
 
-    confirmations = ["y", 'yes']
     confirmation = input().lower()
-    if confirmation not in confirmations:
+    if confirmation not in ["y", 'yes']:
         print("Aborting...")
         quit()
 
