@@ -1,0 +1,4 @@
+#!/bin/bash
+
+# shellcheck disable=SC2046
+xattr -d com.apple.quarantine $(which chromedriver)
