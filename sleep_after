@@ -1,0 +1,11 @@
+#!/bin/bash
+
+if [ "$#" -eq 0 ]; then
+    echo "Please add sleep timeout"
+    exit
+fi
+
+echo "Will go into sleep mode after $1 minutes"
+
+sleep $((60 * $1))
+pmset sleepnow
